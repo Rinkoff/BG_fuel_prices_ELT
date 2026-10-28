@@ -1,0 +1,48 @@
+name: ELT pipeline
+
+# When this runs:
+on:
+  schedule:
+    - cron: "0 6 1 * *"      # 06:00 UTC on the 1st of every month
+  workflow_dispatch: {}       # allow manual runs from the Actions tab
+
+# The job commits fresh raw data back, so it needs write access.
+permissions:
+  contents: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Ingest (API -> raw)
+        run: python ingest/fetch_prices.py
+
+      - name: Load (raw -> DuckDB)
+        run: python load/load_duckdb.py
+
+      - name: dbt run
+        working-directory: dbt
+        run: dbt run --profiles-dir .
+
+      - name: dbt test
+        working-directory: dbt
+        run: dbt test --profiles-dir .
+
+      - name: Commit fresh raw data
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/raw
+          git diff --staged --quiet || git commit -m "chore: weekly raw data refresh"
+          git push
