@@ -1,5 +1,7 @@
 # ⛽ BG Fuel Prices — ELT Pipeline
 
+[![ELT pipeline](https://github.com/Rinkoff/BG_fuel_prices_ELT/actions/workflows/pipeline.yml/badge.svg)](https://github.com/Rinkoff/BG_fuel_prices_ELT/actions/workflows/pipeline.yml)
+
 An end-to-end **ELT data pipeline** for weekly Bulgarian fuel prices:
 ingest from a public API → load into a warehouse → model with dbt → test →
 visualise in a dashboard.
@@ -31,7 +33,7 @@ flowchart LR
 | Transform | dbt (`dbt-duckdb`) |
 | Data quality | dbt tests |
 | Dashboard | Streamlit + Plotly |
-| Orchestration | GitHub Actions *(planned)* |
+| Orchestration | GitHub Actions (monthly cron) |
 
 ---
 
