@@ -1,0 +1,20 @@
+name: 'fuel_prices'
+version: '1.0.0'
+
+# Which connection profile to use (defined in profiles.yml).
+profile: 'fuel_prices'
+
+# Where dbt looks for each kind of file.
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+
+# How models get built by default, per folder:
+#   staging -> views  (light, always fresh, cheap)
+#   marts   -> tables (the star schema we query from the dashboard)
+models:
+  fuel_prices:
+    staging:
+      +materialized: view
+    marts:
+      +materialized: table

@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: dim_fuel_type
+    description: "One row per fuel type."
+    columns:
+      - name: fuel_key
+        description: "Surrogate primary key."
+        tests:
+          - unique
+          - not_null
+      - name: fuel_code
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['e95', 'diesel']
+
+  - name: dim_date
+    description: "One row per bulletin week."
+    columns:
+      - name: date_key
+        description: "Surrogate primary key."
+        tests:
+          - unique
+          - not_null
+      - name: date_day
+        tests:
+          - not_null
+
+  - name: fct_fuel_price_weekly
+    description: "Weekly price per fuel. Grain: one row per (week, fuel)."
+    columns:
+      - name: price_key
+        description: "Surrogate primary key."
+        tests:
+          - unique
+          - not_null
+      - name: price_eur
+        tests:
+          - not_null
+      - name: fuel_key
+        description: "FK to dim_fuel_type."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_fuel_type')
+              field: fuel_key
+      - name: date_key
+        description: "FK to dim_date."
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_date')
+              field: date_key

@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: raw                     # the name we use in {{ source('raw', ...) }}
+    schema: raw                   # the actual schema in DuckDB
+    description: "Raw data loaded into DuckDB by the load step."
+    tables:
+      - name: fuel_prices
+        description: >
+          Weekly Bulgarian pump prices in EUR/litre, one row per week x fuel.
+          Source: fuel-prices.eu (EU Commission Weekly Oil Bulletin), CC BY 4.0.
+        columns:
+          - name: price_date
+            description: "Monday of the bulletin week."
+          - name: fuel_code
+            description: "Fuel type: 'e95' or 'diesel'."
+          - name: price_eur
+            description: "Average pump price in EUR per litre."

@@ -1,0 +1,11 @@
+# Connection settings. For now just our local DuckDB warehouse.
+# (A BigQuery target will be added later for the "production" / CI run.)
+fuel_prices:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # Path is relative to where we run dbt (this dbt/ folder).
+      path: "../data/warehouse.duckdb"
+      schema: main
+      threads: 4
